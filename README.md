@@ -1,0 +1,2 @@
+# nfc-simple
+NFCリーダーとPySimpleGUIのサンプル
