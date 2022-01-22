@@ -4,16 +4,20 @@ import time
 import binascii
 import random
 import datetime
+#from playsound import playsound #python.exe -m pip install playsound
+import pygame # pip install pygame
 
 class Gururi():
     def __init__(self):
+        pygame.mixer.init()
         sg.theme('DarkBrown2')
         self.layout =[[sg.Text('ぐるりパワースポット')],
                  [sg.Text('パワースポットの色'), sg.Text(key='-spotcolor-', size=(40,1))],
+                 [sg.Image(filename='./img/red.png',key='-spotimage-')],
                  [sg.Text('ハムスタンNFCID'), sg.Text(key='-IDm-', size=(40,1))],
                  [sg.Text('ハムスタンの色'), sg.Text(key='-color-', size=(40,1))],
                  [sg.Text(key='-msg-', size=(40,1))]]
-        self.window = sg.Window('NFCタグリーダー', self.layout, size=(300, 150))
+        self.window = sg.Window('NFCタグリーダー', self.layout, size=(800, 800))
         self.spcolor = 0 # spot color
         #print(dir(self.window))
     def compare_color(self):
@@ -30,8 +34,12 @@ class Gururi():
 
         if self.spcolor == self.idmcolor:
             cr.window['-msg-'].update("ぐるりパワーげっと！")
+            pygame.mixer.music.load('./sound/gururipower.mp3')
+            pygame.mixer.music.play()
         else:
             cr.window['-msg-'].update("")
+            pygame.mixer.music.load('./sound/buzzer.mp3')
+            pygame.mixer.music.play()
         
     def check_ic(self):
         #print('Waiting Now')
@@ -75,10 +83,13 @@ if __name__ == '__main__':
                 store_status = status
             if cr.spcolor == 0:
                 strspcolor = "赤"
+                cr.window['-spotimage-'].update(filename='./img/red.png')
             elif cr.spcolor == 1:
                 strspcolor = "青"
+                cr.window['-spotimage-'].update(filename='./img/blue.png')
             elif cr.spcolor == 2:
                 strspcolor = "緑"
+                cr.window['-spotimage-'].update(filename='./img/green.png')
             cr.window['-spotcolor-'].update(strspcolor)
             cr.check_ic()
             
